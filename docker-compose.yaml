@@ -1,0 +1,77 @@
+version: "3"
+
+services:
+  webserver:
+    image: altimofeev/webserver-localhost
+    container_name: webserver
+    working_dir: ${WORKDIR}
+    ports:
+      - ${LOCAL_PORT}:80
+    depends_on:
+      - app
+    volumes:
+      - ./code:${WORKDIR}
+      - sock:${SOCKET_DIR}
+      - ./docker/nginx/sites-enabled/localhost.conf:/etc/nginx/sites-enabled/localhost.conf
+
+  app:
+    image: altimofeev/php-fpm-amqp
+    container_name: app
+    env_file:
+      - .env
+    working_dir: ${WORKDIR}
+    volumes:
+      - ./code:${WORKDIR}
+      - sock:${SOCKET_DIR}
+      - ./docker/fpm/conf.d/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./docker/fpm/conf.d/settings.ini:/usr/local/etc/php/conf.d/settings.ini
+
+  postgres:
+    image: postgres:13.2-alpine
+    container_name: ${DB_HOST}
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+  #    command: ["postgres", "-c", "log_statement=all"]
+
+  #  redis:
+  #    build:
+  #      context: docker/redis
+  #    image: atimofeev/redis
+  #    container_name: ${REDIS_HOST}
+  #    restart: always
+  #    working_dir: /data
+  #    volumes:
+  #      - ./redis-data:/data
+  #
+#  mailercatcher:
+#    image: jeanberu/mailcatcher
+#    container_name: mailcatcher
+#    ports:
+#      - 1025:1025
+#      - 1080:1080
+
+#  rabbitmq:
+#    image: rabbitmq:management
+#    container_name: ${RABBITMQ_HOST}
+#    hostname: ${RABBITMQ_HOST}
+#    restart: always
+#    environment:
+#      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+#      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+#      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
+#    ports:
+#      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
+#      - ${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}
+#    volumes:
+#      - ./rabbit/data:/var/lib/rabbitmq/
+#      - ./rabbit/log:/var/log/rabbitmq
+
+volumes:
+  sock:
