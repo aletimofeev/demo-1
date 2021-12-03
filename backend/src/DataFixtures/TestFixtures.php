@@ -15,7 +15,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture
+class TestFixtures extends Fixture
 {
     private EntityManagerInterface $entityManager;
 
@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
         $positionFixtures = new PositionFixtures();
         $positionFixtures->load($manager);
 
-        $employeeFixtures = new EmployeeFixtures($this->entityManager);
+        $employeeFixtures = new EmployeeTestFixtures($this->entityManager);
         $employeeFixtures->load($manager);
     }
 }

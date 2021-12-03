@@ -16,7 +16,9 @@ framework:
     #esi: true
     #fragments: true
     php_errors:
-        log: true
+        log: 4096 # hide deprecated
+#        log: true
+
 
 when@test:
     framework:

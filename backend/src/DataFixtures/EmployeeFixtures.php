@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\DataFixtures;
 
 use App\Entity\Department;
@@ -10,7 +19,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
-
 
 class EmployeeFixtures extends Fixture
 {
@@ -29,13 +37,19 @@ class EmployeeFixtures extends Fixture
         $this->faker = Factory::create('ru_RU');
     }
 
-
     public function load(ObjectManager $manager): void
     {
         foreach ($this->departments as $department) {
             foreach ($this->positions as $position) {
-                $employee = $this->getEmployee($department, $position);
-                $manager->persist($employee);
+                if ('Руководитель' === $position->getName()) {
+                    $employee = $this->getEmployee($department, $position);
+                    $manager->persist($employee);
+                } else {
+                    for ($i = 0; $i < 5; ++$i) {
+                        $employee = $this->getEmployee($department, $position);
+                        $manager->persist($employee);
+                    }
+                }
             }
         }
 
@@ -50,6 +64,7 @@ class EmployeeFixtures extends Fixture
             ->setFirstname($this->faker->firstName)
             ->setPatronymic($this->faker->firstName)
             ->setBirthDate($this->faker->dateTimeBetween('-60 years', '-20 years'))
+            ->setEmail($this->faker->email)
             ->setPosition($position)
             ->setDepartment($department);
 

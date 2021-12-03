@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace App;
+namespace App\Tests\Api;
 
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-
-class Kernel extends BaseKernel
+class Hydra
 {
-    use MicroKernelTrait;
+    public const TOTAL = 'hydra:totalItems';
+    public const MEMBERS = 'hydra:member';
+    public const VIEW = 'hydra:view';
+    public const SEARCH = 'hydra:search';
 }

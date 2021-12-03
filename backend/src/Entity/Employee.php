@@ -1,19 +1,50 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=EmployeeRepository::class)
+ * @Table(name="employees",indexes={
+ *     @Index(name="employees_name_idx", columns={"lastname"}),
+ *     @Index(name="employees_birth_date_idx", columns={"birth_date"})
+ * })
  *
  * @ApiResource(
  *     normalizationContext={"groups"={"employee"}},
  *     denormalizationContext={"groups"={"employee"}}
+ * )
+ *
+ * @ApiFilter(DateFilter::class, properties={"birthDate"})
+ * @ApiFilter(SearchFilter::class, properties={
+ *     "lastname": "iword_start",
+ *     "department.name": "exact",
+ *     "position.name": "exact",
+ * })
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={"lastname": "ASC", "firstname", "patronymic", "birthDate", "email", "department.name", "position.name"},
+ *     arguments={"orderParameterName"="order"}
  * )
  */
 class Employee
@@ -64,7 +95,6 @@ class Employee
      *
      * @Assert\NotBlank
      * @Assert\Date()
-     *
      */
     private \DateTimeInterface $birthDate;
 
@@ -87,6 +117,13 @@ class Employee
      * @Assert\NotBlank
      */
     private Position $position;
+
+    /**
+     * @Groups({"employee", "department_full"})
+     *
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private ?string $email;
 
     public function getId(): ?int
     {
@@ -161,6 +198,18 @@ class Employee
     public function setPosition(?Position $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
