@@ -11,6 +11,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\DepartmentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,9 +23,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=DepartmentRepository::class)
  *
- * @Table(name="departments",indexes={
+ * @Table(name="departments", indexes={
  *     @Index(name="departments_name_idx", columns={"name"})
  * })
+ *
+ * @ApiResource(
+ *     normalizationContext={"groups" = {"department"}},
+ *     denormalizationContext={"groups" = {"department"}}
+ * )
  */
 class Department
 {

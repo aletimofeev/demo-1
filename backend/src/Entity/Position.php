@@ -11,6 +11,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PositionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,9 +23,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=PositionRepository::class)
  *
- * @Table(name="positions",indexes={
+ * @Table(name="positions", indexes={
  *     @Index(name="positions_name_idx", columns={"name"})
  * })
+ *
+ * @ApiResource(
+ *     normalizationContext={"groups" = {"position"}},
+ *     denormalizationContext={"groups" = {"position"}}
+ * )
  */
 class Position
 {

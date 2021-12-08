@@ -14,8 +14,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
@@ -25,26 +25,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=EmployeeRepository::class)
- * @Table(name="employees",indexes={
+ * @Table(name="employees", indexes={
  *     @Index(name="employees_name_idx", columns={"lastname"}),
  *     @Index(name="employees_birth_date_idx", columns={"birth_date"})
  * })
  *
  * @ApiResource(
- *     normalizationContext={"groups"={"employee"}},
- *     denormalizationContext={"groups"={"employee"}}
+ *     normalizationContext={"groups" = {"employee"}},
+ *     denormalizationContext={"groups" = {"employee"}},
+ *     attributes={"order" = {"lastname" = "ASC"}}
  * )
  *
  * @ApiFilter(DateFilter::class, properties={"birthDate"})
  * @ApiFilter(SearchFilter::class, properties={
- *     "lastname": "iword_start",
- *     "department.name": "exact",
- *     "position.name": "exact",
+ *     "lastname" = "iword_start",
+ *     "department.name" = "exact",
+ *     "position.name" = "exact",
  * })
  * @ApiFilter(
  *     OrderFilter::class,
- *     properties={"lastname": "ASC", "firstname", "patronymic", "birthDate", "email", "department.name", "position.name"},
- *     arguments={"orderParameterName"="order"}
+ *     properties={"lastname", "firstname", "patronymic", "birthDate", "email", "department.name", "position.name"},
+ *     arguments={"orderParameterName" = "order"}
  * )
  */
 class Employee
@@ -66,7 +67,7 @@ class Employee
      * @Assert\NotBlank
      * @Assert\Length(min=3, max=100)
      */
-    private string $lastname;
+    private string $lastname = '';
 
     /**
      * @Groups({"employee", "department_full"})
@@ -76,7 +77,7 @@ class Employee
      * @Assert\NotBlank
      * @Assert\Length(min=3, max=50)
      */
-    private string $firstname;
+    private string $firstname = '';
 
     /**
      * @Groups({"employee", "department_full"})
@@ -86,15 +87,14 @@ class Employee
      * @Assert\NotBlank
      * @Assert\Length(min=3, max=100)
      */
-    private string $patronymic;
+    private string $patronymic = '';
 
     /**
      * @Groups({"employee", "department_full"})
      *
      * @ORM\Column(type="date", name="birth_date")
      *
-     * @Assert\NotBlank
-     * @Assert\Date()
+     * @Assert\Type("\DateTimeInterface")
      */
     private \DateTimeInterface $birthDate;
 
@@ -104,9 +104,9 @@ class Employee
      * @ORM\ManyToOne(targetEntity=Department::class, inversedBy="employees")
      * @ORM\JoinColumn(nullable=false)
      *
-     * @Assert\NotBlank
+     * @Assert\NotNull
      */
-    private Department $department;
+    private ?Department $department;
 
     /**
      * @Groups({"employee", "department_full"})
@@ -114,16 +114,26 @@ class Employee
      * @ORM\ManyToOne(targetEntity=Position::class, inversedBy="employees")
      * @ORM\JoinColumn(nullable=false)
      *
-     * @Assert\NotBlank
+     * @Assert\NotNull
      */
-    private Position $position;
+    private ?Position $position;
 
     /**
      * @Groups({"employee", "department_full"})
      *
      * @ORM\Column(type="string", length=100, nullable=true)
+     *
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     private ?string $email;
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {

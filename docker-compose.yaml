@@ -19,8 +19,8 @@ services:
     container_name: backend
     depends_on:
       - postgres
-#    env_file:
-#      - .env
+      - rabbitmq
+      - mailercatcher
     working_dir: ${WORKDIR}
     volumes:
       - ./backend:${WORKDIR}
@@ -52,28 +52,28 @@ services:
   #    volumes:
   #      - ./redis-data:/data
   #
-#  mailercatcher:
-#    image: jeanberu/mailcatcher
-#    container_name: mailcatcher
-#    ports:
-#      - 1025:1025
-#      - 1080:1080
+  mailercatcher:
+    image: jeanberu/mailcatcher
+    container_name: mailcatcher
+    ports:
+      - ${SMTP_PORT}:${SMTP_PORT}
+      - ${SMTP_MANAGE_PORT}:${SMTP_MANAGE_PORT}
 
-#  rabbitmq:
-#    image: rabbitmq:management
-#    container_name: ${RABBITMQ_HOST}
-#    hostname: ${RABBITMQ_HOST}
-#    restart: always
-#    environment:
-#      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-#      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-#      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
-#    ports:
-#      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
-#      - ${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}
-#    volumes:
-#      - ./rabbit/data:/var/lib/rabbitmq/
-#      - ./rabbit/log:/var/log/rabbitmq
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: ${RABBITMQ_HOST}
+    hostname: ${RABBITMQ_HOST}
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
+    ports:
+      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
+      - ${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}
+    volumes:
+      - ./rabbit/data:/var/lib/rabbitmq/
+      - ./rabbit/log:/var/log/rabbitmq
 
 volumes:
   sock:

@@ -34,6 +34,15 @@ class EmployeeRepositoryTest extends KernelTestCase
         $this->repository = $this->entityManager->getRepository(Employee::class);
     }
 
+    public function testFindByIds()
+    {
+        $employees = $this->repository->findBy([], ['lastname' => 'ASC'], ['limit' => 3]);
+        $ids = array_map(fn ($item): int => $item->getId(), $employees);
+
+        $finding = $this->repository->findBy(['id' => $ids]);
+        $this->assertSame($employees, $finding);
+    }
+
     public function testCount()
     {
         $employees = $this->repository->findAll();

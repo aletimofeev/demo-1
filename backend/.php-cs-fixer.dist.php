@@ -36,6 +36,11 @@ return (new PhpCsFixer\Config())
         'phpdoc_order' => true,
         'strict_comparison' => true,
         'strict_param' => true,
+        //
+        'doctrine_annotation_array_assignment' => true,
+        'doctrine_annotation_braces' => true,
+        'doctrine_annotation_indentation' => true,
+        'doctrine_annotation_spaces' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache')

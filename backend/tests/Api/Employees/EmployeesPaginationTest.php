@@ -1,17 +1,29 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Tests\Api\Employees;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Tests\Api\ApiHelperTrait;
 use App\Tests\Api\Hydra;
 
 class EmployeesPaginationTest extends ApiTestCase
 {
+    use ApiHelperTrait;
+
     public const URL = '/api/employees';
 
     public function testPerPage(): void
     {
-        $response = static::createClient()->request('GET', self::URL . '?itemsPerPage=2');
+        $response = $this->requestAsUser(self::URL.'?itemsPerPage=2');
 
         $this->assertResponseIsSuccessful();
         $data = $response->toArray();
@@ -22,7 +34,7 @@ class EmployeesPaginationTest extends ApiTestCase
 
     public function testSecondPage(): void
     {
-        $response = static::createClient()->request('GET', self::URL . '?itemsPerPage=2&page=2');
+        $response = $this->requestAsEditor(self::URL.'?itemsPerPage=2&page=2');
         $data = $response->toArray();
         $members = $data[Hydra::MEMBERS];
 
@@ -32,7 +44,7 @@ class EmployeesPaginationTest extends ApiTestCase
 
     public function testSecondPageLastNameDescOrder(): void
     {
-        $response = static::createClient()->request('GET', self::URL . '?itemsPerPage=2&page=2&order[lastname]=desc');
+        $response = $this->requestAsUser(self::URL.'?itemsPerPage=2&page=2&order[lastname]=desc');
         $data = $response->toArray();
         $members = $data[Hydra::MEMBERS];
 

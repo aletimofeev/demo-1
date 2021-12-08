@@ -40,7 +40,7 @@ class EmployeeTestFixtures extends Fixture
                     $lastname, $firstname, $patronymic, $birthDate,
                     $email, $departmentName, $positionName1, $positionName2
                     ) = explode(' ', $item);
-                $positionName = $positionName1 . ' ' . $positionName2;
+                $positionName = $positionName1.' '.$positionName2;
             } catch (\Exception $e) {
                 $positionName = $positionName1;
             }
