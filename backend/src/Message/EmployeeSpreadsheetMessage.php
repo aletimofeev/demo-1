@@ -15,11 +15,12 @@ final class EmployeeSpreadsheetMessage
 {
     private string $context;
 
-    public function __construct(array $ids, string $email)
+    public function __construct(array $ids, string $email, string $username)
     {
         $context = [
             'ids' => $ids,
             'email' => $email,
+            'username' => $username,
         ];
         $this->context = json_encode($context);
     }

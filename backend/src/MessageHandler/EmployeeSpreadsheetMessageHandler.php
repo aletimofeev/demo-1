@@ -1,23 +1,14 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace App\MessageHandler;
 
 use App\Message\EmployeeSpreadsheetMessage;
 use App\Service\Employee\EmployeeService;
 use Exception;
-use const PHP_EOL;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Mime\Email;
 
 final class EmployeeSpreadsheetMessageHandler implements MessageHandlerInterface
 {
@@ -34,24 +25,25 @@ final class EmployeeSpreadsheetMessageHandler implements MessageHandlerInterface
 
     public function __invoke(EmployeeSpreadsheetMessage $message)
     {
-        list($ids, $email) = array_values($message->getContext());
+        list($ids, $email, $username) = array_values($message->getContext());
         $filename = $this->service->createSpreadsheet($ids);
 
         try {
-            $this->sendEmail($filename, $email);
+            $this->sendEmail($filename, $email, $username);
             unlink($filename);
         } catch (Exception $e) {
-            echo $e->getMessage(), PHP_EOL;
+            echo $e->getMessage(), \PHP_EOL;
         }
     }
 
-    private function sendEmail(string $filename, string $to): void
+    private function sendEmail(string $filename, string $to, string $username): void
     {
-        $email = (new Email())
+        $email = (new TemplatedEmail())
             ->from($this->adminEmail)
             ->to($to)
             ->subject('Список работников')
-            ->text('Запрошенные данные во вложении')
+            ->htmlTemplate('emails/employees.html.twig')
+            ->context(['username' => $username])
             ->attachFromPath($filename);
 
         $this->mailer->send($email);

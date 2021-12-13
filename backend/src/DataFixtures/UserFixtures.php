@@ -44,7 +44,8 @@ class UserFixtures extends Fixture
             ->setLastname('Сергеев')
             ->setFirstname('Сергей')
             ->setEmail('editor@example.com')
-            ->setPassword($hashedPassword);
+            ->setPassword($hashedPassword)
+            ->setRoles(['ROLE_EDITOR']);
         $manager->persist($editor);
 
 

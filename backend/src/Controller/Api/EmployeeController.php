@@ -9,25 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
-use App\Repository\EmployeeRepository;
+use App\Service\Employee\EmployeeRequestHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/test")
+ * @Route("/api/employees")
  */
 class EmployeeController extends AbstractController
 {
     /**
-     * @Route("", name="employees")
+     * @Route("/email-employees", name="api_employees_email", methods={"POST"})
      */
-    public function index(EmployeeRepository $repository): Response
+    public function listEmployees(Request $request, EmployeeRequestHandler $handler): Response
     {
-        $data = $repository->findAll();
-
-        return $this->json($data);
+        $dto = $handler->handleEmailRequest($request);
+        return $this->json($dto->getData(), $dto->getCode());
     }
 }

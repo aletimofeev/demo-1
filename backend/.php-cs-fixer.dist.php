@@ -1,17 +1,17 @@
 <?php
 
+/*
+ * (c) Alexandr Timofeev <tim31al@gmail.com>
+ */
+
 $fileHeaderComment = <<<COMMENT
-This file is part of the Symfony package.
-
-(c) Fabien Potencier <fabien@symfony.com>
-
-For the full copyright and license information, please view the LICENSE
-file that was distributed with this source code.
+(c) Alexandr Timofeev <tim31al@gmail.com>
 COMMENT;
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude('config')
+
     ->exclude('var')
     ->exclude('public/bundles')
     ->exclude('public/build')
@@ -36,7 +36,6 @@ return (new PhpCsFixer\Config())
         'phpdoc_order' => true,
         'strict_comparison' => true,
         'strict_param' => true,
-        //
         'doctrine_annotation_array_assignment' => true,
         'doctrine_annotation_braces' => true,
         'doctrine_annotation_indentation' => true,

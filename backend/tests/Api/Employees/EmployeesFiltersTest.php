@@ -48,6 +48,24 @@ class EmployeesFiltersTest extends ApiTestCase
         $this->assertCount(1, $data[Hydra::MEMBERS]);
     }
 
+    public function testEmployeesFiltersFirstname(): void
+    {
+        $response = $this->requestAsUser(self::URL.'?firstname=валер');
+        $data = $response->toArray();
+
+        $this->assertSame(1, $data[Hydra::TOTAL]);
+        $this->assertCount(1, $data[Hydra::MEMBERS]);
+    }
+
+    public function testEmployeesFiltersPatronymic(): void
+    {
+        $response = $this->requestAsUser(self::URL.'?patronymic=ант');
+        $data = $response->toArray();
+
+        $this->assertSame(1, $data[Hydra::TOTAL]);
+        $this->assertCount(1, $data[Hydra::MEMBERS]);
+    }
+
     public function testEmployeesFiltersBirthDateBefore(): void
     {
         $response = $this->requestAsEditor(self::URL.'?birthDate[before]=1979-01-01');

@@ -16,15 +16,20 @@ trait ApiHelperTrait
 
     }
 
-    protected function requestAsUser(string $url, string $method = 'GET'): ResponseInterface
+    protected function requestAsUser(string $url, string $method = 'GET', array $data = null): ResponseInterface
     {
         $token = $this->getUserToken();
 
+        $options = [
+            'headers' => ['Content-Type' => 'application/json'],
+            'auth_bearer' => $token,
+        ];
+        if ($data) {
+            $options = array_merge($options, ['json' => $data]);
+        }
+
         return static::createClient()
-            ->request($method, $url, [
-                'headers' => ['Content-Type' => 'application/json'],
-                'auth_bearer' => $token,
-            ]);
+            ->request($method, $url, $options);
     }
 
     protected function requestAsEditor(string $url, string $method = 'GET'): ResponseInterface

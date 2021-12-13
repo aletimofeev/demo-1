@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Tests\Service;
+namespace App\Tests\Service\Employee;
 
 use App\Repository\EmployeeRepository;
 use App\Service\Employee\EmployeeService;
@@ -20,14 +20,14 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class EmployeeServiceTest extends KernelTestCase
 {
-    public const DATA_DIR = __DIR__.'/../data';
+    public const DATA_DIR = __DIR__.'/../../data';
     public const DATA = [1, 2];
 
     private array $filenames = [];
 
     public function testCallRepository()
     {
-        $data = require __DIR__.'/../data/employees.php';
+        $data = require __DIR__.'/../../data/employees.php';
 
         $creator = $this->createMock(SpreadsheetCreator::class);
         $creator

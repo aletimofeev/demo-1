@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Entity\User;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ApiUserController extends AbstractController
+class UserController extends AbstractController
 {
 //    /**
 //     * @Route("/api/login", name="api_login")

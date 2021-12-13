@@ -39,8 +39,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(DateFilter::class, properties={"birthDate"})
  * @ApiFilter(SearchFilter::class, properties={
  *     "lastname" = "iword_start",
- *     "department.name" = "exact",
- *     "position.name" = "exact",
+ *     "firstname" = "iword_start",
+ *     "patronymic" = "iword_start",
+ *     "department.name" = "iword_start",
+ *     "position.name" = "iword_start",
  * })
  * @ApiFilter(
  *     OrderFilter::class,

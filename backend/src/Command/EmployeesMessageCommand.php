@@ -57,7 +57,8 @@ class EmployeesMessageCommand extends Command
                 $employees = $this->repository->findBy([], ['lastname' => 'ASC'], $limit);
                 $ids = array_map(fn ($item) => $item->getId(), $employees);
 
-                $message = new EmployeeSpreadsheetMessage($ids, 'user@example.com');
+
+                $message = new EmployeeSpreadsheetMessage($ids, 'user@example.com', 'user');
                 $this->bus->dispatch($message);
 
                 $io->success('Данные улетели');
