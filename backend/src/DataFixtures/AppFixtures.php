@@ -14,14 +14,17 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
     private EntityManagerInterface $entityManager;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
         $this->entityManager = $entityManager;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function load(ObjectManager $manager): void
@@ -34,5 +37,8 @@ class AppFixtures extends Fixture
 
         $employeeFixtures = new EmployeeFixtures($this->entityManager);
         $employeeFixtures->load($manager);
+
+        $userFixtures = new UserFixtures($this->passwordHasher);
+        $userFixtures->load($manager);
     }
 }

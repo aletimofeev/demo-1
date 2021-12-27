@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .wrapper {
+            margin: 2rem auto;
+            width: 80%;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+	        justify-content: space-between;
+        }
+
+        .item {
+            background: gray;
+            border-radius: .25rem;
+	        box-shadow: 0 .25rem .5rem gray, inset 0 0 1rem 1rem #B11A04;
+            padding: 1rem;
+	        flex-basis: 100px;
+	        height: 100px;
+	        margin: .5rem;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+        }
+        .item:hover {
+	        cursor: pointer;
+        }
+        .item-text {
+	        color: white;
+	        font-weight: 500;
+        }
+	</style>
+</head>
+<body>
+
+<div class="wrapper">
+	<div class="container">
+
+	</div>
+</div>
+
+
+</body>
+<script>
+  const MAX_ELEMENTS = 15;
+
+  const container = document.querySelector('div.container');
+
+
+  const createElement = (text) => {
+    const el = document.createElement('div');
+    el.classList.add('item');
+
+    const textEl = document.createElement('div');
+    textEl.innerText = text;
+    textEl.classList.add('item-text');
+
+    el.insertAdjacentElement('afterbegin', textEl);
+
+    return el;
+  };
+
+  for(let i = 0; i < MAX_ELEMENTS; i++) {
+    const el = createElement(`Element ${i+1}`);
+    container.appendChild(el);
+  }
+</script>
+</html>

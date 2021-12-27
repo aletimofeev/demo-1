@@ -22,6 +22,8 @@ use Faker\Generator;
 
 class EmployeeFixtures extends Fixture
 {
+    const DEPARTMENT_EMPLOYEES_COUNT = 100;
+
     /** @var \App\Entity\Department[] */
     private array $departments;
     /** @var \App\Entity\Position[] */
@@ -45,7 +47,7 @@ class EmployeeFixtures extends Fixture
                     $employee = $this->getEmployee($department, $position);
                     $manager->persist($employee);
                 } else {
-                    for ($i = 0; $i < 5; ++$i) {
+                    for ($i = 0; $i < self::DEPARTMENT_EMPLOYEES_COUNT; ++$i) {
                         $employee = $this->getEmployee($department, $position);
                         $manager->persist($employee);
                     }
@@ -63,7 +65,7 @@ class EmployeeFixtures extends Fixture
             ->setLastname($this->faker->lastName)
             ->setFirstname($this->faker->firstName)
             ->setPatronymic($this->faker->firstName)
-            ->setBirthDate($this->faker->dateTimeBetween('-60 years', '-20 years'))
+            ->setBirthDate($this->faker->dateTimeBetween('-75 years', '-20 years'))
             ->setEmail($this->faker->email)
             ->setPosition($position)
             ->setDepartment($department);
